@@ -1,0 +1,54 @@
+timedatectl set-ntp true
+timedatectl set-timezone America/Detroit
+timedatectl set-local-rtc 1
+cfdisk /dev/sda
+mount /dev/sda2 /mnt
+mkswap /dev/sda1
+swapon /dev/sda1
+pacstrap /mnt base base-devel linux linux-firmware nano net-tools php-fpm nginx networkmanager grub grub-bios os-prober openssh openvpn 
+genfstab -U /mnt >> /mnt/etc/fstab
+arch-chroot /mnt
+timedatectl set-ntp true
+timedatectl set-timezone America/Detroit
+timedatectl set-local-rtc 1
+sed -i '/#en_US.UTF-8 UTF-8/c en_US.UTF-8 UTF-8' /etc/locale.gen ; \
+sed -i '/#en_US ISO-8859-1/c en_US ISO-8859-1' /etc/locale.gen ; \
+locale-gen
+cat > /etc/vconsole.conf  <<KEY
+KEYMAP=us
+KEY
+grub-install /dev/sda
+mkinitcpio -p linux
+grub-mkconfig -o /boot/grub/grub.cfg
+passwd
+
+exit
+umount -R /mnt
+# to create the partitions programatically (rather than manually)
+# we're going to simulate the manual input to fdisk
+# The sed script strips off all the comments so that we can 
+# document what we're doing in-line with the actual commands
+# Note that a blank line (commented as "defualt" will send a empty
+# line terminated with a newline to take the fdisk default.
+sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk ${TGTDEV}
+  d # delete drive info
+  d 
+  d
+  d
+  o # clear the in memory partition table
+  n # new partition
+  p # primary partition
+  1 # partition number 1
+    # default - start at beginning of disk 
+  +100M # 100 MB boot parttion
+  n # new partition
+  p # primary partition
+  2 # partion number 2
+    # default, start immediately after preceding partition
+    # default, extend partition to end of disk
+  a # make a partition bootable
+  1 # bootable partition is partition 1 -- /dev/sda1
+  p # print the in-memory partition table
+  w # write the partition table
+  q # and we're done
+EOF
