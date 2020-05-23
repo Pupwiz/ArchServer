@@ -1,4 +1,4 @@
-
+#(echo o; echo n; echo p; echo 1; echo ""; echo +2G; echo n; echo p; echo 2; echo ""; echo ""; echo w; echo q) | fdisk /dev/$(echo #$Output_Device)
 # cfdisk /dev/sda
 # mkswap /dev/sda1
 mkfs.ext4 /dev/sda2
@@ -22,13 +22,13 @@ HOS
 grub-install /dev/sda
 mkinitcpio -p linux
 grub-mkconfig -o /boot/grub/grub.cfg
-echo -e "serverpass\serverpass" | passwd root
-# quietly add a user without password
-adduser --quiet --disabled-password --shell /bin/bash --home /home/media --gecos "User" media
-# set password
-echo "media:serverpass" | chpasswd
+sudo useradd -m media -p tiaboo32
+sudo useradd -m vpn -p tiaboo32
+usermod -aG sudo media
+usermod -aG vpn media
+usermod -aG media vpn
 systemctl enable NetworkManager
-git clone https://aur.archlinux.org/yay.git
+su media git clone https://aur.archlinux.org/yay.git
 cd yay
 makepkg -si
 
