@@ -3,7 +3,7 @@
 # mkswap /dev/sda1
 mount /dev/sda2 /mnt
 swapon /dev/sda1
-pacstrap /mnt base base-devel linux linux-firmware nano net-tools php-fpm nginx networkmanager grub grub-bios os-prober openssh openvpn 
+pacstrap /mnt base base-devel linux linux-firmware nano net-tools git php-fpm nginx networkmanager grub grub-bios os-prober openssh openvpn 
 genfstab -U /mnt >> /mnt/etc/fstab
 arch-chroot /mnt
 timedatectl set-ntp true
@@ -20,6 +20,9 @@ mkinitcpio -p linux
 grub-mkconfig -o /boot/grub/grub.cfg
 echo -e "linuxpassword\nlinuxpassword" | passwd linuxuser
 systemctl enable NetworkManager
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -si
 
 #exit
 #umount -R /mnt
