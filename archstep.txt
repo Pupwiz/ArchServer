@@ -9,8 +9,8 @@ arch-chroot /mnt
 timedatectl set-ntp true
 timedatectl set-timezone America/Detroit
 timedatectl set-local-rtc 1
-sed -i '/#en_US.UTF-8 UTF-8/c en_US.UTF-8 UTF-8' /etc/locale.gen ; \
-sed -i '/#en_US ISO-8859-1/c en_US ISO-8859-1' /etc/locale.gen ; \
+sed -i '/#en_US.UTF-8 UTF-8/c en_US.UTF-8 UTF-8' /etc/locale.gen
+sed -i '/#en_US ISO-8859-1/c en_US ISO-8859-1' /etc/locale.gen
 locale-gen
 cat > /etc/vconsole.conf  <<KEY
 KEYMAP=us
@@ -18,10 +18,11 @@ KEY
 grub-install /dev/sda
 mkinitcpio -p linux
 grub-mkconfig -o /boot/grub/grub.cfg
-passwd
+echo -e "linuxpassword\nlinuxpassword" | passwd linuxuser
+systemctl enable NetworkManager
 
 #exit
-umount -R /mnt
+#umount -R /mnt
 # to create the partitions programatically (rather than manually)
 # we're going to simulate the manual input to fdisk
 # The sed script strips off all the comments so that we can 
