@@ -22,8 +22,10 @@ HOS
 grub-install /dev/sda
 mkinitcpio -p linux
 grub-mkconfig -o /boot/grub/grub.cfg
-sudo useradd -m media -p tiaboo32
-sudo useradd -m vpn -p tiaboo32
+sudo useradd -m media 
+sudo passwd media
+sudo useradd -m vpn 
+sudo passwd vpn 
 usermod -aG sudo media
 usermod -aG vpn media
 usermod -aG media vpn
