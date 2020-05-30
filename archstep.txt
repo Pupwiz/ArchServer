@@ -12,6 +12,7 @@ timedatectl set-timezone America/Detroit
 timedatectl set-local-rtc 1
 sed -i '/#en_US.UTF-8 UTF-8/c en_US.UTF-8 UTF-8' /etc/locale.gen
 sed -i '/#en_US ISO-8859-1/c en_US ISO-8859-1' /etc/locale.gen
+sed -i '/PermitRootLogin/c PermitRootLogin yes' /target/etc/ssh/sshd_config
 locale-gen
 cat > /etc/vconsole.conf  <<KEY
 KEYMAP=us
@@ -30,6 +31,9 @@ usermod -aG sudo media
 usermod -aG vpn media
 usermod -aG media vpn
 systemctl enable NetworkManager
+systemdtl enable sshd
+# root password
+passwd
 su media git clone https://aur.archlinux.org/yay.git
 cd yay
 makepkg -si
