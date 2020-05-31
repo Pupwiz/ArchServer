@@ -4,7 +4,7 @@
 mkfs.ext4 /dev/sda2
 mount /dev/sda2 /mnt
 swapon /dev/sda1
-pacstrap /mnt base base-devel linux linux-firmware nano sudo go cronie net-tools git php-fpm nginx networkmanager grub grub-bios os-prober openssh openvpn 
+pacstrap /mnt base base-devel linux linux-firmware nano sudo go miniupnp cronie net-tools git php-fpm nginx networkmanager grub grub-bios os-prober openssh openvpn 
 genfstab -U /mnt >> /mnt/etc/fstab
 arch-chroot /mnt
 timedatectl set-ntp true
