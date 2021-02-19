@@ -41,7 +41,7 @@ mount /dev/sda1 /mnt/boot/efi
 mkswap /dev/sda2
 swapon /dev/sda2
 
-pacstrap /mnt base base-devel linux linux-firmware nano sudo go miniupnp net-tools git networkmanager grub grub-bios os-prober openssh openvpn 
+pacstrap /mnt base base-devel linux linux-firmware nano sudo go miniupnp net-tools git networkmanager grub grub-bios os-prober openssh openvpn efibootmgr mkinitcpio reflector
 genfstab -U /mnt >> /mnt/etc/fstab
 arch-chroot /mnt
 timedatectl set-ntp true
@@ -57,7 +57,7 @@ KEY
 cat > /etc/hostname <<HOS
 archserver
 HOS
-grub-install /dev/sda
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=ARCH --recheck
 mkinitcpio -p linux
 grub-mkconfig -o /boot/grub/grub.cfg
 sudo useradd -m media 
